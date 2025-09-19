@@ -1,0 +1,5 @@
+{
+  "name": "Spotty",
+  "description": "Un'applicazione che visualizza una mappa e centra la vista sulla posizione attuale dell'utente.",
+  "requestFramePermissions": []
+}

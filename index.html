@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spotty - Segnalazioni in Tempo Reale</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+  <!-- Banner Notifiche -->
+  <div id="notification" class="hidden">
+    <span id="notification-message"></span>
+    <button id="notification-close" aria-label="Chiudi notifica">&times;</button>
+  </div>
+  
+  <!-- Mappa -->
+  <div id="map" aria-label="Mappa interattiva"></div>
+
+  <!-- Controlli Mappa -->
+  <div class="map-controls">
+    <button id="center-map-btn" aria-label="Centra la mappa sulla tua posizione">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="3"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line>
+      </svg>
+    </button>
+    <button id="add-spot-btn" aria-label="Aggiungi una nuova segnalazione">
+       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Modale Aggiungi Segnalazione -->
+  <div id="spot-modal-backdrop" class="hidden">
+    <div id="spot-modal">
+      <h2>Crea una Nuova Segnalazione</h2>
+      <form id="spot-form">
+        <div class="form-group">
+          <label for="spot-title">Titolo</label>
+          <input type="text" id="spot-title" name="title" placeholder="Es. Concerto in piazza" required>
+        </div>
+        <div class="form-group">
+          <label for="spot-category">Categoria</label>
+          <select id="spot-category" name="category" required>
+            <option value="evento">Evento Organizzato</option>
+            <option value="incidente">Incidente / Imprevisto</option>
+            <option value="traffico">Info Traffico</option>
+            <option value="altro">Altro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="spot-photo">Foto Testimonianza</label>
+          <input type="file" id="spot-photo" name="photo" accept="image/*" required>
+        </div>
+        <div class="form-group" id="image-preview-container" class="hidden">
+            <img id="image-preview" src="#" alt="Anteprima immagine" />
+        </div>
+        <div class="form-actions">
+          <button type="button" id="cancel-spot-btn">Annulla</button>
+          <button type="submit">Salva Segnalazione</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module" src="index.tsx"></script>
+</body>
+</html>
