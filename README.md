@@ -15,8 +15,7 @@ View your app in AI Studio: https://ai.studio/apps/drive/1ddcSmsokVPfCMPvKNopYTD
 
 1. Install dependencies:
    `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
+2. Run the app:
    `npm run dev`
 
 ## Deploy on GitHub Pages
@@ -35,4 +34,3 @@ https://pioshin.github.io/SPOTTY/
 
 Notes:
 - If you fork/rename the repo, update `base` accordingly (e.g., `/my-new-repo/`).
-- Avoid embedding secrets in the client bundle. `GEMINI_API_KEY` in a static site becomes public.
