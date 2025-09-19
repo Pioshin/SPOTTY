@@ -70,6 +70,20 @@ html, body {
   display: none !important;
 }
 
+/* Status overlay */
+#app-status {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2000;
+  background: rgba(255,255,255,0.95);
+  border: 1px solid #ccc;
+  padding: 8px 10px;
+  border-radius: 6px;
+  color: #333;
+  font-size: 14px;
+}
+
 /* --- Map Controls --- */
 .map-controls {
   position: absolute;

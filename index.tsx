@@ -9,6 +9,7 @@ declare const L: any;
 document.addEventListener('DOMContentLoaded', () => {
   // --- Elementi DOM ---
   const mapElement = document.getElementById('map');
+  const appStatusElement = document.getElementById('app-status');
   const notificationElement = document.getElementById('notification');
   const notificationMessageElement = document.getElementById('notification-message');
   const notificationCloseButton = document.getElementById('notification-close');
@@ -26,6 +27,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // Verifica la presenza degli elementi essenziali
   if (!mapElement || !notificationElement || !spotModalBackdrop || !spotForm) {
     console.error("Elementi UI essenziali non trovati nel DOM!");
+  appStatusElement?.classList.remove('hidden');
+  if (appStatusElement) appStatusElement.textContent = 'Errore: elementi UI mancanti nel DOM.';
     return;
   }
 
@@ -35,6 +38,8 @@ document.addEventListener('DOMContentLoaded', () => {
   // FIX: Use 'any' for Leaflet LatLng type as 'L' namespace is not defined.
   let newSpotCoords: any | null = null;
   const spots: any[] = []; // Array in memoria per contenere le segnalazioni
+  // Mappa (definita a livello superiore per uso nei listener)
+  let map: any;
 
   // --- Funzioni di Utilità UI ---
   function showNotification(message: string, temporary: boolean = false) {
@@ -49,12 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
     notificationElement!.classList.add('hidden');
   }
 
+  // --- Status helpers ---
+  function showStatus(msg: string) {
+    if (!appStatusElement) return;
+    appStatusElement.textContent = msg;
+    appStatusElement.classList.remove('hidden');
+  }
+  function hideStatus() { appStatusElement?.classList.add('hidden'); }
+
   // --- Inizializzazione Mappa ---
-  const map = L.map(mapElement).setView([41.9028, 12.4964], 6);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
-    attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }).addTo(map);
+  try {
+    if (typeof L === 'undefined') {
+      showStatus('Errore: libreria Leaflet non caricata. Ricarica la pagina (CTRL+F5).');
+      return;
+    }
+    showStatus('Inizializzazione mappa…');
+    map = L.map(mapElement).setView([41.9028, 12.4964], 6);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    hideStatus();
 
   // --- Logica di Geolocalizzazione ---
   function centerOnUserLocation() {
@@ -142,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
       switch (category) {
           case 'evento': return '🎉';
           case 'incidente': return '⚠️';
-          case 'traffico': return ' congested';
+          case 'traffico': return '🚦';
           default: return '📍';
       }
   }
@@ -201,4 +221,18 @@ document.addEventListener('DOMContentLoaded', () => {
   cancelSpotButton?.addEventListener('click', closeSpotModal);
   spotForm?.addEventListener('submit', handleFormSubmit);
   spotPhotoInput?.addEventListener('change', handleImagePreview);
+
+  // Mostra errori JS in overlay
+  window.addEventListener('error', (e) => {
+    showStatus('Errore runtime: ' + (e.error?.message || e.message));
+  });
+  window.addEventListener('unhandledrejection', (e: PromiseRejectionEvent) => {
+    const msg = (e.reason && (e.reason.message || String(e.reason))) || 'Promise rifiutata';
+    showStatus('Errore async: ' + msg);
+  });
+  } catch (err: any) {
+    console.error(err);
+    showStatus('Errore durante l\'inizializzazione: ' + (err?.message || String(err)));
+    return;
+  }
 });
