@@ -4,12 +4,12 @@ import { defineConfig, loadEnv } from 'vite';
 
 
 export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, '.', '');
-  const __dirname = dirname(fileURLToPath(import.meta.url));
+    const env = loadEnv(mode, '.', '');
+    const __dirname = dirname(fileURLToPath(import.meta.url));
+    const isGhPages = mode === 'gh-pages';
     return {
-  // Base public path for GitHub Pages project site: https://pioshin.github.io/SPOTTY/
-  // If you fork/rename the repo, update this to match your repo name (leading and trailing slashes required).
-  base: '/SPOTTY/',
+      // Use repo base only for GitHub Pages builds; '/' elsewhere (local, Netlify, Vercel, etc.)
+      base: isGhPages ? '/SPOTTY/' : '/',
       plugins: [],
   // No client-side secret injection; app is fully static.
       resolve: {

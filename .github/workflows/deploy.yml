@@ -30,8 +30,8 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Build
-        run: npm run build
+      - name: Build (gh-pages mode)
+        run: npm run build -- --mode gh-pages
         env:
           # Opzionale: se usi una chiave in build, aggiungila come secret del repo (Settings > Secrets > Actions)
           # ATTENZIONE: per siti statici la chiave finisce nel bundle pubblico; evita di inserire segreti se non strettamente necessario

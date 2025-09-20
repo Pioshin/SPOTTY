@@ -34,3 +34,15 @@ https://pioshin.github.io/SPOTTY/
 
 Notes:
 - If you fork/rename the repo, update `base` accordingly (e.g., `/my-new-repo/`).
+
+## Alternative deploys
+
+### Netlify
+1. Push su GitHub.
+2. Su app.netlify.com: New site → Import repository → seleziona questo repo.
+3. Build command: `npm run build` — Publish directory: `dist` (già in `netlify.toml`).
+
+### Vercel
+1. Push su GitHub.
+2. Su vercel.com: New Project → Import Git Repository.
+3. Framework preset: Other → Build command `npm run build`, Output `dist` (già in `vercel.json`).
