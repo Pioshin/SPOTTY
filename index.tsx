@@ -42,7 +42,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const centerMapButton = document.getElementById('center-map-btn');
   const addSpotButton = document.getElementById('add-spot-btn');
   const spotModalBackdrop = document.getElementById('spot-modal-backdrop');
-  const spotModal = document.getElementById('spot-modal');
   // FIX: Cast spotForm to HTMLFormElement to access the reset() method.
   const spotForm = document.getElementById('spot-form') as HTMLFormElement;
   const cancelSpotButton = document.getElementById('cancel-spot-btn');
