@@ -5,6 +5,32 @@
 
 // Informa TypeScript della variabile globale 'L' fornita dalla libreria Leaflet
 declare const L: any;
+declare global {
+  interface Window {
+    L: any;
+  }
+}
+
+// Funzione per verificare se Leaflet è caricato
+function waitForLeaflet(callback: () => void, maxAttempts = 50) {
+  let attempts = 0;
+  const check = () => {
+    attempts++;
+    if (typeof window.L !== 'undefined') {
+      callback();
+    } else if (attempts < maxAttempts) {
+      setTimeout(check, 100);
+    } else {
+      console.error('Leaflet non è stato caricato dopo 5 secondi');
+      const appStatus = document.getElementById('app-status');
+      if (appStatus) {
+        appStatus.textContent = 'Errore: Mappa non disponibile. Ricarica la pagina.';
+        appStatus.classList.remove('hidden');
+      }
+    }
+  };
+  check();
+}
 
 document.addEventListener('DOMContentLoaded', () => {
   // --- Elementi DOM ---
@@ -63,18 +89,31 @@ document.addEventListener('DOMContentLoaded', () => {
   function hideStatus() { appStatusElement?.classList.add('hidden'); }
 
   // --- Inizializzazione Mappa ---
-  try {
-    if (typeof L === 'undefined') {
-      showStatus('Errore: libreria Leaflet non caricata. Ricarica la pagina (CTRL+F5).');
+  function initializeMap() {
+    try {
+      if (typeof L === 'undefined') {
+        showStatus('Errore: libreria Leaflet non caricata. Ricarica la pagina (CTRL+F5).');
+        return;
+      }
+      showStatus('Inizializzazione mappa…');
+      map = L.map(mapElement).setView([41.9028, 12.4964], 6);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      hideStatus();
+
+      // Aggiungi event listeners dopo l'inizializzazione della mappa
+      map.on('click', handleMapClick);
+    } catch (err: any) {
+      console.error(err);
+      showStatus('Errore durante l\'inizializzazione: ' + (err?.message || String(err)));
       return;
     }
-    showStatus('Inizializzazione mappa…');
-    map = L.map(mapElement).setView([41.9028, 12.4964], 6);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 19,
-      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
-    hideStatus();
+  }
+
+  // Usa waitForLeaflet per assicurarsi che la libreria sia caricata
+  waitForLeaflet(initializeMap);
 
   // --- Logica di Geolocalizzazione ---
   function centerOnUserLocation() {
@@ -217,7 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
   centerMapButton?.addEventListener('click', centerOnUserLocation);
   notificationCloseButton?.addEventListener('click', hideNotification);
   addSpotButton?.addEventListener('click', toggleAddSpotMode);
-  map.on('click', handleMapClick);
   cancelSpotButton?.addEventListener('click', closeSpotModal);
   spotForm?.addEventListener('submit', handleFormSubmit);
   spotPhotoInput?.addEventListener('change', handleImagePreview);
@@ -230,9 +268,4 @@ document.addEventListener('DOMContentLoaded', () => {
     const msg = (e.reason && (e.reason.message || String(e.reason))) || 'Promise rifiutata';
     showStatus('Errore async: ' + msg);
   });
-  } catch (err: any) {
-    console.error(err);
-    showStatus('Errore durante l\'inizializzazione: ' + (err?.message || String(err)));
-    return;
-  }
 });

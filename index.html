@@ -6,6 +6,25 @@
   <title>Spotty - Segnalazioni in Tempo Reale</title>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <!-- Fallback CDN in caso il principale non funzioni -->
+  <script>
+  if (typeof L === 'undefined') {
+    console.warn('Leaflet principale non caricato, carico fallback...');
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+    script.integrity = 'sha512-5cMGE6DlgYKcvBXWdeFJ9YzB6+dPvj6R0z3D4AqtGgw2P3i8U5eiLM4OTyMKG9h4c2w2KSjB1FKy2FLCdZQQ7w==';
+    script.crossOrigin = 'anonymous';
+    document.head.appendChild(script);
+
+    const link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css';
+    link.integrity = 'sha512-L7qo6BKQ8YzBg85i1mE2i2Rv0cqArZKYO+QFFA6K2eE0M6tTc6k9f22Q3c4zqHLRGbYK8p7kZ7+0sO+K4RJ+1w==';
+    link.crossOrigin = 'anonymous';
+    document.head.appendChild(link);
+  }
+  </script>
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
